@@ -12,7 +12,7 @@ UserRoute.post("/register", async (req, res) => {
         let existingUser = await userModels.findOne({ username });
         
         if (existingUser) {
-            return res.status(400).send({ message: "Username already exist!!" });
+            return res.status(200).send({ message: "Username already exist!!" });
         }
 
         // Encrypt the password
@@ -22,12 +22,12 @@ UserRoute.post("/register", async (req, res) => {
         const userData = new userModels({ username, password: hashedPassword, role });
         await userData.save();
 
-        console.log(userData)
 
         // Generate JWT token
         const token = generateToken({ username: userData?.username, role: userData?.role });
 
-        res.status(201).send({ message: "User Logged in sucessfully!", token: token })
+        res.status(201).send({ message: "User Logged in sucessfully!", token: token });
+
     } catch (error) {
         res.status(400).send({ err: error?.message })
     }
@@ -39,12 +39,12 @@ UserRoute.post("/login", async (req, res) => {
 
         const existingUser = await userModels.findOne({ username });
         if (!existingUser) {
-            return res.status(400).send({ message: "User not exist, Please register first!!" });
+            return res.status(200).send({ message: "User not exist, Please register first!!" });
         }
         let hashedPassword = bcrypt.compareSync(password, existingUser?.password);
 
         if (!hashedPassword) {
-            return res.status(400).send({ message: 'Invalid password or username' });
+            return res.status(200).send({ message: 'Invalid password or username' });
         }
        
         const token = generateToken({ username: existingUser?.username, role: existingUser?.role });

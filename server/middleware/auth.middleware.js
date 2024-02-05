@@ -4,7 +4,7 @@ dotenv.config();
 
 const authValidate = (req, res, next) => {
     const token = req.headers?.token;
-    
+    console.log(token)
     let secretKey = process.env.SECRETKEY;
 
     console.log("token",verifyToken(token,secretKey));

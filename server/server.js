@@ -1,3 +1,4 @@
+const cors = require("cors")
 const express = require("express");
 const bookRoute = require("./routes/Book.route");
 const dotenv = require("dotenv");
@@ -5,19 +6,28 @@ const connection = require("./config/db");
 const UserRoute = require("./routes/auth.route");
 const validateData = require("./middleware/ValidateData.middleware");
 dotenv.config();
-
+const morgan = require("morgan");
 const bodyParser = require('body-parser');
 const authValidate = require("./middleware/auth.middleware");
 const validateBookData = require("./middleware/bookDateValidate.middleware");
-
+const logger = require("./utils/loggers");
+const tokenRoute = require("./routes/Token.route");
 const app = express();
+
+
+
 //  previously wer were using app.use(express.json()) instead of bodyPraser 
 //it's an external library but a good one
+//activating cors policy
+app.use(cors())
+
+//used morgan to print the http request 
+app.use(morgan('combined',{stream:logger.stream}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use("/books/",authValidate,validateBookData,bookRoute)
 app.use("/auth/",validateData,UserRoute)
+app.use("/token/",tokenRoute)
 
 
 const PORT = process.env.PORT || 8080;
@@ -31,5 +41,4 @@ app.listen(PORT,async()=>{
     }catch(err){
         console.log({"Error Message":err?.message})
     }
-
 })

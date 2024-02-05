@@ -1,0 +1,17 @@
+.main-app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f0f2f5;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  h1 {
+    color: #0056b3;
+    font-size: 2.5rem;
+    text-shadow: 1px 1px 2px #bbb;
+  }
+  

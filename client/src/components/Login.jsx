@@ -1,20 +1,41 @@
-import React, { useState } from 'react';
-// import { useHistory } from 'react-router-dom';
+import axios from 'axios';
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import "./Login.css"
+import { ContextApi } from './ContextApi';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-//   const history = useHistory();
 
-  const handleLogin = () => {
-    // Implement login logic here using axios or fetch
-    // If login is successful, navigate to DisplayBooks
-    // history.push('/display-books');
+  
+  const navigate = useNavigate();
+  const handleLogin =async (e) => {
+    e.preventDefault();
+    console.log(username,password)
+
+    if(username && password){
+       await axios.post("http://localhost:8000/auth/login",{
+          username,
+          password,
+        }).then(data=>{
+          alert(data.data.message)
+          let token = data?.data?.token;
+          if(token){
+            localStorage.setItem("token",data.data.token)
+            localStorage.setItem("name",username);
+          }
+          navigate("/books");
+        }).catch(err=>{
+          console.log(err?.message)
+          alert(err?.message)
+        })
+      }
   };
 
   return (
     <div className="container">
-      <h2>Login</h2>
+      <h2>Login page</h2>
       <form>
         <label>
           Username:
@@ -24,9 +45,7 @@ const Login = () => {
           Password:
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </label>
-        <button type="button" onClick={handleLogin}>
-          Login
-        </button>
+      <input type="submit" value="login" onClick={handleLogin} />
       </form>
     </div>
   );
